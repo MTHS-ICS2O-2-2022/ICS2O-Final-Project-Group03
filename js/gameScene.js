@@ -9,7 +9,14 @@
 class GameScene extends Phaser.Scene {
   // create an alien
   createAlien() {
-    const alienYLocation = Math.floor(Math.random() * 1080) + 1 // this will get a number between 1 and 1920
+    let alienYLocation = Math.floor(Math.random() * 3) + 1 // this will get a number between 1 and 5
+    if (alienYLocation == 1) {
+    alienYLocation = 400
+    } else if (alienYLocation == 2) {
+      alienYLocation = 600
+    } else if (alienYLocation == 3) {
+      alienYLocation = 800
+    }
     let alienYVelocity = Math.floor(Math.random() * 500) + 200 // this will get a number between 1 and 50
     const anAlien = this.physics.add.sprite(-100, alienYLocation, "alien")
     anAlien.body.velocity.y = 0
@@ -73,6 +80,8 @@ class GameScene extends Phaser.Scene {
 
     // create a group for the aliens
     this.alienGroup = this.add.group()
+    this.createAlien()
+    this.createAlien()
     this.createAlien()
 
     // Collisions between missiles and aliens
@@ -157,7 +166,9 @@ class GameScene extends Phaser.Scene {
     }
     this.alienGroup.children.each(function (item) {
       if (item.x > 2000) {
-        item.x = 200
+        //item.x = 200
+        this.item.destroy()
+        this.createAlien()
       }
     })
   }
