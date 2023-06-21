@@ -2,7 +2,7 @@
 
 // Copyright (c) 2020 Mr. Coxall All rights reserved
 //
-// Created by: Tim Brady
+// Created by: Tim Brady, Ryan Duffett
 // Created on: May 2023
 // This is the Menu scene
 
@@ -36,8 +36,8 @@ class MenuScene extends Phaser.Scene {
      */
     preload() {
       console.log("Menu Scene")
-      this.load.image("menuSceneBackground", "./assets/aliens_screen_image2.jpg")
-      this.load.image("startButton", "./assets/start.png")
+      this.load.image("menuSceneBackground", "./assets/menuScreen.png")
+      this.load.image("startButton", "./assets/startButton.png")
     }
   
     /**

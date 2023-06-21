@@ -2,7 +2,7 @@
 
 // Copyright (c) 2020 Mr. Coxall All rights reserved
 //
-// Created by: Tim Brady
+// Created by: Tim Brady, Ryan Duffett
 // Created on: April 2023
 // This is the Title Scene
 
@@ -41,7 +41,7 @@ class TitleScene extends Phaser.Scene {
      */
     preload() {
       console.log("Title Scene")
-      this.load.image("titleSceneBackground", "./assets/aliens_screen_image.jpg")
+      this.load.image("titleSceneBackground", "./assets/splashSceneImage2.png")
     }
   
     /**
@@ -57,7 +57,7 @@ class TitleScene extends Phaser.Scene {
       this.titleSceneBackgroundImage.y = 1080 / 2
   
       this.TitleSceneText = this.add
-      .text(1920 / 2, (1080 / 2) + 350, "Space Aliens", this.titleSceneTextStyle)
+      .text(1920 / 2, (1080 / 2) + 350, "Crossy Dom", this.titleSceneTextStyle)
       .setOrigin(0.5)
     }
   

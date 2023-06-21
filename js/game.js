@@ -2,7 +2,7 @@
 
 // Copyright (c) 2020 Mr. Coxall All rights reserved
 //
-// Created by: Tim Brady
+// Created by: Tim Brady, Ryan Duffett
 // Created on: April 2023
 // This is the Phaser3 game configuration file
 

@@ -2,34 +2,32 @@
 
 // Copyright (c) 2020 Mr. Coxall All rights reserved
 //
-// Created by: Tim Brady
+// Created by: Tim Brady, Ryan Duffett
 // Created on: May 2023
 // This is the Game Scene
 
 class GameScene extends Phaser.Scene {
-  // create an alien
-  createAlien() {
-    let alienYLocation = Math.floor(Math.random() * 3) + 1 // this will get a number between 1 and 5
-    if (alienYLocation == 1) {
-    alienYLocation = 400
-    } else if (alienYLocation == 2) {
-      alienYLocation = 600
-    } else if (alienYLocation == 3) {
-      alienYLocation = 800
+  // create a car
+  createCar() {
+    let carYLocation = Math.floor(Math.random() * 3) + 1 // this will get a number between 1 and 5
+    if (carYLocation == 1) {
+      carYLocation = 400
+    } else if (carYLocation == 2) {
+      carYLocation = 600
+    } else if (carYLocation == 3) {
+      carYLocation = 800
     }
-    let alienYVelocity = Math.floor(Math.random() * 500) + 200 // this will get a number between 1 and 50
-    const anAlien = this.physics.add.sprite(-100, alienYLocation, "alien")
-    anAlien.body.velocity.y = 0
-    anAlien.body.velocity.x = alienYVelocity
-    this.alienGroup.add(anAlien)
+    const aCar = this.physics.add.sprite(-100, carYLocation, "car")
+    aCar.body.velocity.y = 0
+    aCar.body.velocity.x = carYLocation
+    this.carGroup.add(aCar)
   }
 
   constructor() {
     super({ key: "gameScene" })
 
     this.background = null
-    this.ship = null
-    this.fireMissile = false
+    this.dominik = null
     this.score = 0
     this.scoreText = null
     this.scoreTextStyle = {
@@ -52,18 +50,16 @@ class GameScene extends Phaser.Scene {
     console.log("Game Scene")
 
     // images
-    this.load.image("starBackground", "assets/background.png")
-    this.load.image("ship", "assets/spaceShip.png")
-    this.load.image("missile", "assets/missile.png")
-    this.load.image("alien", "assets/game_car.png")
+    this.load.image("roadBackground", "assets/background.png")
+    this.load.image("dominik", "assets/dominik.png")
+    this.load.image("car", "assets/game_car.png")
+    this.load.image("greek", "assets/greek.png")
     // sound
-    this.load.audio("laser", "assets/laser1.wav")
-    this.load.audio("explosion", "assets/barrelExploding.wav")
     this.load.audio("bomb", "assets/bomb.wav")
   }
 
   create(data) {
-    this.background = this.add.image(0, 0, "starBackground").setScale(1.0)
+    this.background = this.add.image(0, 0, "roadBackground").setScale(1.0)
     this.background.setOrigin(0, 0)
 
     this.scoreText = this.add.text(
@@ -73,41 +69,38 @@ class GameScene extends Phaser.Scene {
       this.scoreTextStyle
     )
 
-    this.ship = this.physics.add.sprite(1920 / 2, 1080 - 100, "ship")
+    this.dominik = this.physics.add.sprite(1920 / 2, 1080 - 100, "dominik")
 
-    // create a group for the missiles
-    this.missileGroup = this.physics.add.group()
+    this.greek = this.physics.add.sprite(1920 / 2, 1080 - 890, "greek")
 
-    // create a group for the aliens
-    this.alienGroup = this.add.group()
-    this.createAlien()
-    this.createAlien()
-    this.createAlien()
+    // create a group for the cars
+    this.carGroup = this.add.group()
+    this.createCar()
+    this.createCar()
 
-    // Collisions between missiles and aliens
+    // Collisions between dom and greek on wheels to add a point to the total score
     this.physics.add.collider(
-      this.missileGroup,
-      this.alienGroup,
-      function (missileCollide, alienCollide) {
-        alienCollide.destroy()
-        missileCollide.destroy()
-        this.sound.play("explosion")
+      this.dominik,
+      this.greek,
+      function (dominikCollide) {
+        dominikCollide.y = 980
+        dominikCollide.x = 960
         this.score = this.score + 1
         this.scoreText.setText("Score: " + this.score.toString())
-        this.createAlien()
-        this.createAlien()
+        this.createCar()
       }.bind(this)
     )
 
-    // Collisions between ship and aliens
+
+    // Collisions between dom and cars
     this.physics.add.collider(
-      this.ship,
-      this.alienGroup,
-      function (shipCollide, alienCollide) {
+      this.dominik,
+      this.carGroup,
+      function (dominikCollide, carCollide) {
         this.sound.play("bomb")
         this.physics.pause()
-        alienCollide.destroy()
-        shipCollide.destroy()
+        carCollide.destroy()
+        dominikCollide.destroy()
         this.score = 0
         this.gameOverText = this.add
           .text(
@@ -126,7 +119,7 @@ class GameScene extends Phaser.Scene {
   }
 
   update(time, delta) {
-    // called 60 times a second, hopefully!
+    // called 60 times a second
 
     const keyLeftObj = this.input.keyboard.addKey("LEFT")
     const keyRightObj = this.input.keyboard.addKey("RIGHT")
@@ -138,37 +131,35 @@ class GameScene extends Phaser.Scene {
     const keySObj = this.input.keyboard.addKey("S")
 
     if (keyLeftObj.isDown || keyAObj.isDown === true) {
-      this.ship.x -= 4
-      if (this.ship.x < 0) {
-        this.ship.x = 1920
+      this.dominik.x -= 4
+      if (this.dominik.x < 0) {
+        this.dominik.x = 1920
       }
     }
 
     if (keyRightObj.isDown || keyDObj.isDown === true) {
-      this.ship.x += 4
-      if (this.ship.x > 1920) {
-        this.ship.x = 0
+      this.dominik.x += 4
+      if (this.dominik.x > 1920) {
+        this.dominik.x = 0
       }
     }
 
     if (keyUpObj.isDown || keyWObj.isDown === true) {
-      this.ship.y -= 4
-      if (this.ship.y > 1920) {
-        this.ship.y = 0
+      this.dominik.y -= 4
+      if (this.dominik.y > 1920) {
+        this.dominik.y = 0
       }
     }
 
     if (keyDownObj.isDown || keySObj.isDown === true) {
-      this.ship.y += 4
-      if (this.ship.y > 1920) {
-        this.ship.y = 0
+      this.dominik.y += 4
+      if (this.dominik.y > 1920) {
+        this.dominik.y = 0
       }
     }
-    this.alienGroup.children.each(function (item) {
+    this.carGroup.children.each(function (item) {
       if (item.x > 2000) {
-        //item.x = 200
-        this.item.destroy()
-        this.createAlien()
+        item.x = 0
       }
     })
   }
